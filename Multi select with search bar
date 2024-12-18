@@ -1,0 +1,588 @@
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import * as React from "react";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
+
+export default function ITAdmin() {
+  const [personName, setPersonName] = React.useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    // Check if "All" is selected or deselected
+    if (value.includes("All")) {
+      if (personName.includes("All")) {
+        // If "All" is already selected, deselect it and all other options
+        setPersonName([]);
+      } else {
+        // Otherwise, select all options
+        setPersonName(["All", ...names]);
+      }
+    } else {
+      // Regular selection logic
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      // If "All" is unchecked from the selection, deselect all
+      if (personName.includes("All") && !newSelection.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(newSelection);
+      }
+    }
+  };
+
+  const isAllSelected = personName.length === names.length + 1; // +1 accounts for "All"
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={MenuProps}
+        >
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
+
+
+
+// 
+
+
+
+
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import * as React from "react";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
+
+export default function ITAdmin() {
+  // Set initial state to include "All" and all other names
+  const [personName, setPersonName] = React.useState(["All", ...names]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    // Check if "All" is selected or deselected
+    if (value.includes("All")) {
+      if (personName.includes("All")) {
+        // If "All" is already selected, deselect it and all other options
+        setPersonName([]);
+      } else {
+        // Otherwise, select all options
+        setPersonName(["All", ...names]);
+      }
+    } else {
+      // Regular selection logic
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      // If "All" is unchecked from the selection, deselect all
+      if (personName.includes("All") && !newSelection.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(newSelection);
+      }
+    }
+  };
+
+  const isAllSelected = personName.length === names.length + 1; // +1 accounts for "All"
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={MenuProps}
+        >
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
+
+// with search
+
+
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import * as React from "react";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
+
+export default function ITAdmin() {
+  const [personName, setPersonName] = React.useState(["All", ...names]);
+  const [searchQuery, setSearchQuery] = React.useState(""); // State to store search query
+  const [filteredNames, setFilteredNames] = React.useState(names); // Filtered names based on search
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (value.includes("All")) {
+      if (personName.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(["All", ...names]);
+      }
+    } else {
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      if (personName.includes("All") && !newSelection.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(newSelection);
+      }
+    }
+  };
+
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = names.filter((name) => name.toLowerCase().includes(query));
+    setFilteredNames(filtered);
+  };
+
+  const isAllSelected = personName.length === names.length + 1; // +1 accounts for "All"
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        {/* Search Bar */}
+        <TextField
+          placeholder="Search..."
+          variant="outlined"
+          size="small"
+          value={searchQuery}
+          onChange={handleSearch}
+          sx={{ mb: 1 }}
+        />
+
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={MenuProps}
+        >
+          {/* "All" Option */}
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+
+          {/* Filtered Options */}
+          {filteredNames.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
+
+
+
+
+// =========================> vvi
+
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import React from "react";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+};
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
+
+export default function ITAdmin() {
+  const [personName, setPersonName] = React.useState(["All", ...names]);
+  const [searchQuery, setSearchQuery] = React.useState(""); // Search query state
+  const [filteredNames, setFilteredNames] = React.useState(names); // Filtered options
+
+  // Handle changes in selection
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (value.includes("All")) {
+      if (personName.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(["All", ...names]);
+      }
+    } else {
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      if (personName.includes("All") && !newSelection.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(newSelection);
+      }
+    }
+  };
+
+  // Handle search bar input
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = names.filter((name) => name.toLowerCase().includes(query));
+    setFilteredNames(filtered);
+  };
+
+  // Check if "All" is selected
+  const isAllSelected = personName.length === names.length + 1;
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={{
+            ...MenuProps,
+            disableScrollLock: true, // Ensure scrolling is smooth
+          }}
+        >
+          {/* Search bar above options */}
+          <ListSubheader>
+            <TextField
+              placeholder="Search..."
+              variant="outlined"
+              size="small"
+              value={searchQuery}
+              onChange={handleSearch}
+              autoFocus // Keeps focus in the input field
+              onKeyDown={(e) => e.stopPropagation()} // Prevent dropdown from closing on typing
+              fullWidth
+            />
+          </ListSubheader>
+
+          {/* "All" Option */}
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+
+          {/* Render filtered options */}
+          {filteredNames.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+// =====================================================  MAIN ==================================================================
+
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import React from "react";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+  disableAutoFocusItem: true, // Prevent focus shift to the menu item
+};
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
+
+export default function ITAdmin() {
+  const [personName, setPersonName] = React.useState(["All", ...names]);
+  const [searchQuery, setSearchQuery] = React.useState(""); // Search query state
+  const [filteredNames, setFilteredNames] = React.useState(names); // Filtered options
+
+  // Handle changes in selection
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (value.includes("All")) {
+      if (personName.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(["All", ...names]);
+      }
+    } else {
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      if (personName.includes("All") && !newSelection.includes("All")) {
+        setPersonName([]);
+      } else {
+        setPersonName(newSelection);
+      }
+    }
+  };
+
+  // Handle search bar input
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = names.filter((name) => name.toLowerCase().includes(query));
+    setFilteredNames(filtered);
+  };
+
+  // Check if "All" is selected
+  const isAllSelected = personName.length === names.length + 1;
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={MenuProps} // Set MenuProps here to prevent autofocus shift
+        >
+          {/* Search bar above options */}
+          <ListSubheader>
+            <TextField
+              placeholder="Search..."
+              variant="outlined"
+              size="small"
+              value={searchQuery}
+              onChange={handleSearch}
+              autoFocus // Keeps focus in the input field
+              onKeyDown={(e) => e.stopPropagation()} // Prevent dropdown from closing on typing
+              fullWidth
+            />
+          </ListSubheader>
+
+          {/* "All" Option */}
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+
+          {/* Render filtered options */}
+          {filteredNames.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
