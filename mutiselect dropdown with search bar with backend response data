@@ -1,0 +1,138 @@
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 300,
+    },
+  },
+  disableAutoFocusItem: true, // Prevent focus shift to the menu item
+};
+
+function ITDepartment() {
+  const [allDepartment, setAllDepartment] = useState([]); // Holds all department data
+  const [selectedDepartments, setSelectedDepartments] = useState([]); // Selected departments
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [filteredDepartments, setFilteredDepartments] = useState([]); // Filtered options
+
+  useEffect(() => {
+    axios
+      .get("http://43.205.24.208:9020/employee/all-departments")
+      .then((res) => {
+        const departments = res?.data?.map((i) => i?.mainDepartment);
+        setAllDepartment(departments);
+        setFilteredDepartments(departments); // Initialize filtered options
+        setSelectedDepartments(["All", ...departments]); // Initialize selected options
+      });
+  }, []);
+
+  // Handle changes in selection
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (value.includes("All")) {
+      if (selectedDepartments.includes("All")) {
+        setSelectedDepartments([]);
+      } else {
+        setSelectedDepartments(["All", ...allDepartment]);
+      }
+    } else {
+      const newSelection = typeof value === "string" ? value.split(",") : value;
+
+      if (
+        selectedDepartments.includes("All") &&
+        !newSelection.includes("All")
+      ) {
+        setSelectedDepartments([]);
+      } else {
+        setSelectedDepartments(newSelection);
+      }
+    }
+  };
+
+  // Handle search bar input
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = allDepartment.filter((department) =>
+      department.toLowerCase().includes(query)
+    );
+    setFilteredDepartments(filtered);
+  };
+
+  // Check if "All" is selected
+  const isAllSelected = selectedDepartments.length === allDepartment.length + 1;
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Department</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={selectedDepartments}
+          onChange={handleChange}
+          input={<OutlinedInput label="Department" />}
+          renderValue={(selected) =>
+            selected.includes("All") ? "All" : selected.join(", ")
+          }
+          MenuProps={MenuProps} // Set MenuProps here to prevent autofocus shift
+          sx={{
+            fontSize: "0.9rem", // Adjust font size for compactness
+            height: 36, // Reduced height of the select box
+          }}
+        >
+          {/* Search bar above options */}
+          <ListSubheader>
+            <div className="flex space-x-5 items-center mb-2">
+              <FaSearch className="text-2xl text-gray-500" />
+              <TextField
+                placeholder="Search..."
+                variant="outlined"
+                size="small"
+                value={searchQuery}
+                onChange={handleSearch}
+                autoFocus // Keeps focus in the input field
+                onKeyDown={(e) => e.stopPropagation()} // Prevent dropdown from closing on typing
+                fullWidth
+              />
+            </div>
+          </ListSubheader>
+
+          {/* "All" Option */}
+          <MenuItem key="All" value="All">
+            <Checkbox checked={isAllSelected} />
+            <ListItemText primary="All" />
+          </MenuItem>
+
+          {/* Render filtered options */}
+          {filteredDepartments.map((department) => (
+            <MenuItem key={department} value={department}>
+              <Checkbox checked={selectedDepartments.includes(department)} />
+              <ListItemText primary={department} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
+export default ITDepartment;
