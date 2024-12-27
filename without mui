@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  useStoreSelectedEmployee,
+  useStoreTotalEmployee,
+  useStoreTotalFilteredEmployee,
+} from "./useFileStore";
+
+function ITEmployee() {
+  const [employees, setEmployees] = useState([]); // Store employee data
+  const [selectedEmployees, setSelectedEmployees] = useState([]); // Store selected employees
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [filteredEmployees, setFilteredEmployees] = useState([]); // Filtered employee options
+
+  const { setTotalEmployeeNumber } = useStoreTotalEmployee();
+  const { setTotalFilteredEmployeeNumber } = useStoreTotalFilteredEmployee();
+  const { setSelectedEmployee } = useStoreSelectedEmployee();
+
+  useEffect(() => {
+    setTotalEmployeeNumber(employees?.length);
+  }, [employees]);
+
+  useEffect(() => {
+    setTotalFilteredEmployeeNumber(
+      selectedEmployees?.length === employees?.length + 1
+        ? selectedEmployees?.length - 1
+        : selectedEmployees?.length
+    );
+  }, [selectedEmployees]);
+
+  // Fetch employee data on component mount
+  useEffect(() => {
+    axios
+      .get("http://localhost:8086/employee/allEmp/itAdmin") // Update endpoint to fetch employees
+      .then((response) => {
+        const fetchedEmployees = response.data.map(
+          (emp) => `${emp.empId}-${emp.firstName}`
+        );
+        setEmployees(fetchedEmployees);
+        setFilteredEmployees(fetchedEmployees); // Initialize filtered list
+        setSelectedEmployees(["All", ...fetchedEmployees]); // Preselect all by default
+      })
+      .catch((error) => console.error("Failed to fetch employees:", error));
+  }, []);
+
+  // Handle changes in selection
+  const handleChange = (event) => {
+    const value = event.target.value;
+
+    if (value === "All") {
+      if (selectedEmployees.includes("All")) {
+        setSelectedEmployees([]);
+      } else {
+        setSelectedEmployees(["All", ...employees]);
+      }
+    } else {
+      const newSelection = selectedEmployees.includes(value)
+        ? selectedEmployees.filter((item) => item !== value)
+        : [...selectedEmployees, value];
+
+      if (selectedEmployees.includes("All") && !newSelection.includes("All")) {
+        setSelectedEmployees([]);
+      } else {
+        setSelectedEmployees(newSelection);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setSelectedEmployee(selectedEmployees);
+  }, [selectedEmployees]);
+
+  // Handle search bar input
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = employees.filter((employee) =>
+      employee.toLowerCase().includes(query)
+    );
+    setFilteredEmployees(filtered);
+  };
+
+  // Check if "All" is selected
+  const isAllSelected = selectedEmployees.length === employees.length + 1;
+
+  return (
+    <div style={{ margin: "1rem", width: "300px" }}>
+      <label htmlFor="employee-select" style={{ fontSize: "0.9rem" }}>
+        Employee
+      </label>
+      <div style={{ position: "relative", marginTop: "0.5rem" }}>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={handleSearch}
+          style={{
+            width: "100%",
+            padding: "8px",
+            marginBottom: "0.5rem",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+        <div
+          style={{
+            maxHeight: "200px",
+            overflowY: "auto",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            backgroundColor: "#fff",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "8px",
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={isAllSelected}
+              onChange={() => handleChange({ target: { value: "All" } })}
+            />
+            <label style={{ marginLeft: "8px" }}>All</label>
+          </div>
+          {filteredEmployees.map((employee) => (
+            <div
+              key={employee}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "8px",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={selectedEmployees.includes(employee)}
+                onChange={() => handleChange({ target: { value: employee } })}
+              />
+              <label style={{ marginLeft: "8px" }}>{employee}</label>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ITEmployee;
